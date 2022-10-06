@@ -10,7 +10,7 @@ const Main = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const { data } = await axios.get('http://localhost:5000/detail')
+            const { data } = await axios.get('/detail')
 
             setDetail(data);
         }

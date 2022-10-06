@@ -24,7 +24,7 @@ function TextFieldHiddenLabel() {
         e.preventDefault();
 
         const body = { name, state, age, sweet, spicy, salty }
-        const { data } = await axios.post('http://localhost:5000/detail', body)
+        const { data } = await axios.post('/detail', body)
         console.log(data);
     };
 
