@@ -1,57 +1,107 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import Form from './Form'
+import { useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import axios from 'axios'
+import Paper from '@mui/material/Paper';
 
-const columns = [
-    ,
-    { field: '_id', headerName: 'Sr No', width: 70 },
-    { field: 'name', headerName: 'First name', width: 130 },
-    {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 100,
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
     },
-    { field: 'state', headerName: 'State', width: 130 },
-    { field: 'salty', headerName: 'Salty', width: 130 },
-    { field: 'spicy', headerName: 'Spicy', width: 130 },
-    { field: 'sweet', headerName: 'Sweet', width: 130 },
-    { field: 'match', headerName: '% Match', width: 130 },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
 
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 
-];
+function createData(name, age, state, spicy, sweet) {
+    return { name, age, state, spicy, sweet };
+}
 
 const rows = [
-    { _id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { _id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { _id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { _id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { _id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { _id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { _id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { _id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { _id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+    createData('Eclair', 262, 16.0, 24, 6.0),
+    createData('Cupcake', 305, 3.7, 67, 4.3),
+    createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function DataTable(props) {
+export default function CustomizedTables(props) {
+
+
+
 
     const arrayObj = props.data
-    // console.log("hgvhghg", props.data);
+
+
     for (var i = 0; i < arrayObj.length; i++) {
         arrayObj[i].id = arrayObj[i]._id;
-
     }
+
+    const remove = async (id) => {
+
+
+
+        const { data } = await axios.delete(`/detail/${id}`)
+
+        console.log(data);
+        if (props.loader) {
+            props.setLoader(0)
+        }
+        else {
+            props.setLoader(1)
+        }
+
+    };
+
     return (
-        <div style={{ height: 600, width: '100%' }}>
-            <DataGrid
-                rows={arrayObj}
-
-                columns={columns}
-                pageSize={5}
-            // rowsPerPageOptions={[5]}
-
-            />
-        </div>
-
+        <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                <TableHead>
+                    <TableRow>
+                        <StyledTableCell>Name</StyledTableCell>
+                        <StyledTableCell align="right">Age</StyledTableCell>
+                        <StyledTableCell align="right">State&nbsp;</StyledTableCell>
+                        <StyledTableCell align="right">Spicy&nbsp;</StyledTableCell>
+                        <StyledTableCell align="right">Salty&nbsp;</StyledTableCell>
+                        <StyledTableCell align="right">Sweet&nbsp;</StyledTableCell>
+                        <StyledTableCell align="right">Remove&nbsp;</StyledTableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {!arrayObj ? "loading" : arrayObj.map((row) => (
+                        <StyledTableRow key={row.name}>
+                            <StyledTableCell component="th" scope="row">
+                                {row.name}
+                            </StyledTableCell>
+                            <StyledTableCell align="right">{row.age}</StyledTableCell>
+                            <StyledTableCell align="right">{row.state}</StyledTableCell>
+                            <StyledTableCell align="right">{row.salty}</StyledTableCell>
+                            <StyledTableCell align="right">{row.spicy}</StyledTableCell>
+                            <StyledTableCell align="right">{row.sweet}</StyledTableCell>
+                            <StyledTableCell align="right"> <Button onClick={() => { remove(row.id) }
+                            } variant="contained">Delete</Button></StyledTableCell>
+                        </StyledTableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 }

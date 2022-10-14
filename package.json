@@ -8,7 +8,7 @@
     "start": "node Server/Server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "backend": "node Server/server.js",
-    "client":"npm start --prefix Client",
+    "client": "npm start --prefix Client",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix Client && npm run build --prefix Client"
   },
   "keywords": [],
